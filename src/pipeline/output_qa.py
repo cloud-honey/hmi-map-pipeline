@@ -42,15 +42,24 @@ class QAReport:
     fallback_reason: str = ""
 
     def to_dict(self):
+        def _native(obj):
+            if isinstance(obj, (np.bool_,)):
+                return bool(obj)
+            if isinstance(obj, (np.integer,)):
+                return int(obj)
+            if isinstance(obj, (np.floating,)):
+                return float(obj)
+            return obj
+
         return {
-            "passed": self.passed,
-            "structure_alignment_score": round(self.structure_alignment_score, 4),
-            "color_rule_score": round(self.color_rule_score, 4),
-            "artifact_score": round(self.artifact_score, 4),
-            "overall_score": round(self.overall_score, 4),
+            "passed": _native(self.passed),
+            "structure_alignment_score": round(float(self.structure_alignment_score), 4),
+            "color_rule_score": round(float(self.color_rule_score), 4),
+            "artifact_score": round(float(self.artifact_score), 4),
+            "overall_score": round(float(self.overall_score), 4),
             "issues": self.issues,
             "warnings": self.warnings,
-            "fallback_triggered": self.fallback_triggered,
+            "fallback_triggered": _native(self.fallback_triggered),
             "fallback_reason": self.fallback_reason,
         }
 
@@ -370,21 +379,24 @@ class OutputPackageGenerator:
         if masks_path and Path(masks_path).exists():
             import shutil
             masks_dest = str(out_dir / "masks.png")
-            shutil.copy(masks_path, masks_dest)
+            if masks_path != masks_dest:
+                shutil.copy(masks_path, masks_dest)
             results["masks"] = masks_dest
 
         # 4. Copy anchors if provided
         if anchors_path and Path(anchors_path).exists():
             import shutil
             anchors_dest = str(out_dir / "anchors.json")
-            shutil.copy(anchors_path, anchors_dest)
+            if anchors_path != anchors_dest:
+                shutil.copy(anchors_path, anchors_dest)
             results["anchors"] = anchors_dest
 
         # 5. Copy metadata if provided
         if metadata_path and Path(metadata_path).exists():
             import shutil
             meta_dest = str(out_dir / "metadata.json")
-            shutil.copy(metadata_path, meta_dest)
+            if metadata_path != meta_dest:
+                shutil.copy(metadata_path, meta_dest)
             results["metadata"] = meta_dest
 
         # 6. QA report

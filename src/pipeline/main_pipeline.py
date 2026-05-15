@@ -143,9 +143,11 @@ class HMIMapPipeline:
         )
         renderer = ISORenderer(camera=cam, config=r_conf)
         outputs = renderer.render(self.geometry)
-        det_img = outputs["render"]
-        depth_img = outputs["depth"]
-        normal_img = outputs["normal"]
+        det_img_arr = outputs["render"]
+        from PIL import Image as PILImage
+        det_img = PILImage.fromarray(det_img_arr)
+        depth_img_arr = outputs["depth"]
+        normal_img_arr = outputs["normal"]
 
         # Save deterministic render
         det_path = str(Path(output_dir) / "base_render.png")
