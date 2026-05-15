@@ -1,0 +1,43 @@
+{
+  "input": { "path": "samples/sample_floorplan.dxf" },
+  "output": { "directory": "./output", "filename_prefix": "hmi_map" },
+  "parser": {
+    "min_wall_thickness_mm": 60,
+    "min_room_area_mm2": 50000
+  },
+  "renderer": {
+    "wall_height_mm": 3000,
+    "wall_thickness_mm": 200,
+    "floor_thickness_mm": 200,
+    "door_height_mm": 2100,
+    "window_sill_mm": 900,
+    "camera_pixels_per_mm": 0.5,
+    "bg_color": [40, 40, 40],
+    "floor_color": [85, 85, 85],
+    "wall_color": [160, 160, 160]
+  },
+  "ai_refinement": {
+    "enabled": false,
+    "model_path": "stabilityai/stable-diffusion-xl-base-1.0",
+    "denoise_strength": 0.30,
+    "guidance_scale": 7.5,
+    "num_steps": 25,
+    "seed": 42,
+    "tile_size": 512,
+    "tile_overlap": 64,
+    "controlnet_tile_scale": 0.7,
+    "controlnet_canny_scale": 0.5,
+    "enable_model_offload": true
+  },
+  "qa": {
+    "enabled": true,
+    "threshold_alignment": 0.75,
+    "threshold_color": 0.80,
+    "threshold_artifact": 0.70
+  },
+  "pipeline": {
+    "skip_ai_refinement": false,
+    "force_deterministic": false,
+    "verbose": true
+  }
+}

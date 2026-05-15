@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HMI Map Pipeline Configuration",
+  "description": "External config for the HMI Map Automation Pipeline",
+  "type": "object",
+  "required": ["input", "output"],
+  "properties": {
+    "input": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to input file (DXF/DWG/PNG/PDF)"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["auto", "dxf", "dwg", "png", "pdf"],
+          "default": "auto",
+          "description": "Input file type (auto-detect if omitted)"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["directory"],
+      "properties": {
+        "directory": {
+          "type": "string",
+          "default": "./output",
+          "description": "Output directory for all pipeline artifacts"
+        },
+        "filename_prefix": {
+          "type": "string",
+          "default": "hmi_map",
+          "description": "Prefix for output filenames"
+        }
+      }
+    },
+    "parser": {
+      "type": "object",
+      "properties": {
+        "layer_mapping": {
+          "type": "object",
+          "description": "Custom layer name → category mappings"
+        },
+        "min_wall_thickness_mm": {
+          "type": "number",
+          "default": 60
+        },
+        "min_room_area_mm2": {
+          "type": "number",
+          "default": 50000
+        }
+      }
+    },
+    "renderer": {
+      "type": "object",
+      "properties": {
+        "wall_height_mm": { "type": "number", "default": 3000 },
+        "wall_thickness_mm": { "type": "number", "default": 200 },
+        "floor_thickness_mm": { "type": "number", "default": 200 },
+        "door_height_mm": { "type": "number", "default": 2100 },
+        "window_sill_mm": { "type": "number", "default": 900 },
+        "camera_pixels_per_mm": { "type": "number", "default": 0.5 },
+        "bg_color": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "default": [40, 40, 40]
+        },
+        "floor_color": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "default": [85, 85, 85]
+        },
+        "wall_color": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 },
+          "default": [160, 160, 160]
+        }
+      }
+    },
+    "ai_refinement": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "model_path": {
+          "type": "string",
+          "default": "stabilityai/stable-diffusion-xl-base-1.0"
+        },
+        "denoise_strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.30
+        },
+        "guidance_scale": {
+          "type": "number",
+          "default": 7.5
+        },
+        "num_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 25
+        },
+        "seed": {
+          "type": "integer",
+          "default": 42
+        },
+        "tile_size": {
+          "type": "integer",
+          "default": 512
+        },
+        "tile_overlap": {
+          "type": "integer",
+          "default": 64
+        },
+        "controlnet_tile_scale": {
+          "type": "number",
+          "default": 0.7
+        },
+        "controlnet_canny_scale": {
+          "type": "number",
+          "default": 0.5
+        },
+        "enable_model_offload": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "threshold_alignment": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.75
+        },
+        "threshold_color": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.80
+        },
+        "threshold_artifact": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.70
+        }
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "properties": {
+        "skip_ai_refinement": {
+          "type": "boolean",
+          "default": false
+        },
+        "force_deterministic": {
+          "type": "boolean",
+          "default": false
+        },
+        "verbose": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  }
+}
